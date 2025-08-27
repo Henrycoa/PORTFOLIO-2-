@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Navbar from "./components/Navbar";
 import "./styles/index.css";
 import henryImage from "./assets/henry.png";
@@ -6,21 +6,13 @@ import sswmsimage from "./assets/sswms1.png";
 import tesda from "./assets/tesda.png";
 import grab from "./assets/grab.png";
 import brgy from "./assets/sanguninang_kabataan.png";
-import ojt from "./assets/ojt.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import img1 from "./assets/ojt.png";
-import img2 from "./assets/ojt.png";
-import img3 from "./assets/ojt.png";
-import img4 from "./assets/ojt.png";
-import img5 from "./assets/ojt.png";
+
 
 function App() {
-  const [typedText, setTypedText] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [typedText,] = useState("");
   const [activeFilter, setActiveFilter] = useState("All");
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [selectedExperience, setSelectedExperience] = useState(null);
 
   const roles = [
     "Frontend Developer",
@@ -301,13 +293,7 @@ function App() {
       : projects.filter((p) => p.category === activeFilter);
 
   // Handle opening project modal
-  const handleOpenProjectModal = (project) => {
-    setSelectedProject(project);
-    const modal = new window.bootstrap.Modal(
-      document.getElementById("projectModal")
-    );
-    modal.show();
-  };
+
 
   // Handle opening experience modal
 
@@ -336,25 +322,7 @@ function App() {
   }, []);
 
   // Enhanced typing animation with better timing
-  useEffect(() => {
-    const currentRole = roles[currentIndex];
-    let charIndex = 0;
 
-    const typeInterval = setInterval(() => {
-      if (charIndex <= currentRole.length) {
-        setTypedText(currentRole.slice(0, charIndex));
-        charIndex++;
-      } else {
-        clearInterval(typeInterval);
-        setTimeout(() => {
-          setCurrentIndex((prev) => (prev + 1) % roles.length);
-          setTypedText("");
-        }, 2000);
-      }
-    }, 80);
-
-    return () => clearInterval(typeInterval);
-  }, [currentIndex]);
 
   // Initialize AOS and other animations
   useEffect(() => {
@@ -437,7 +405,6 @@ function App() {
   useEffect(() => {
     // Simple scroll-based animations without GSAP
     const handleScroll = () => {
-      const scrollY = window.scrollY;
       const windowHeight = window.innerHeight;
 
       if (introRef.current && circleRef.current) {
@@ -1211,11 +1178,7 @@ function App() {
             data-aos-duration="1000"
             data-aos-once="false"
           >
-            <img
-              src={ojt}
-              alt="group photo of us"
-              style={{ width: "100%", borderRadius: "10px" }}
-            />
+          
           </div>
 
           {/* Text fades in/out on scroll */}
@@ -1722,22 +1685,22 @@ function App() {
               <h6 className="fw-bold text-warning mb-3">Services</h6>
               <ul className="list-unstyled">
                 <li>
-                  <a href="#" className="text-white text-decoration-none">
+                  <a href="#home" className="text-white text-decoration-none">
                     Web Development
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-white text-decoration-none">
+                  <a href="#home" className="text-white text-decoration-none">
                     Mobile Apps
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-white text-decoration-none">
+                  <a href="#home" className="text-white text-decoration-none">
                     UI/UX Design
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="text-white text-decoration-none">
+                  <a href="#home" className="text-white text-decoration-none">
                     Consulting
                   </a>
                 </li>
