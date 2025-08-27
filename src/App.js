@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import Navbar from "./components/Navbar";
 import "./styles/index.css";
 import henryImage from "./assets/henry.png";
@@ -6,13 +6,16 @@ import sswmsimage from "./assets/sswms1.png";
 import tesda from "./assets/tesda.png";
 import grab from "./assets/grab.png";
 import brgy from "./assets/sanguninang_kabataan.png";
+import ojt from "./assets/ojt.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 
 function App() {
-  const [typedText,] = useState("");
+  const [typedText, setTypedText] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [activeFilter, setActiveFilter] = useState("All");
+  const [setSelectedProject] = useState(null);
 
   const roles = [
     "Frontend Developer",
@@ -322,7 +325,25 @@ function App() {
   }, []);
 
   // Enhanced typing animation with better timing
+  useEffect(() => {
+    const currentRole = roles[currentIndex];
+    let charIndex = 0;
 
+    const typeInterval = setInterval(() => {
+      if (charIndex <= currentRole.length) {
+        setTypedText(currentRole.slice(0, charIndex));
+        charIndex++;
+      } else {
+        clearInterval(typeInterval);
+        setTimeout(() => {
+          setCurrentIndex((prev) => (prev + 1) % roles.length);
+          setTypedText("");
+        }, 2000);
+      }
+    }, 80);
+
+    return () => clearInterval(typeInterval);
+  }, [currentIndex]);
 
   // Initialize AOS and other animations
   useEffect(() => {
@@ -1178,7 +1199,11 @@ function App() {
             data-aos-duration="1000"
             data-aos-once="false"
           >
-          
+            <img
+              src={ojt}
+              alt="group photo of us"
+              style={{ width: "100%", borderRadius: "10px" }}
+            />
           </div>
 
           {/* Text fades in/out on scroll */}
