@@ -7,18 +7,26 @@ import tesda from "./assets/tesda.png";
 import grab from "./assets/grab.png";
 import brgy from "./assets/sanguninang_kabataan.png";
 import ojt from "./assets/ojt.png";
+<<<<<<< HEAD:src/App.jsx
 import capstone from "./assets/capstone.png";
+=======
+>>>>>>> b3d4c727f32195b0bc7025a48255543e1b33741a:src/App.js
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 function App() {
   const [typedText, setTypedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
+<<<<<<< HEAD:src/App.jsx
   const [activeFilter,] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
   const [stars, setStars] = useState([]);
   const [showMouse, setShowMouse] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
+=======
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [setSelectedProject] = useState(null);
+>>>>>>> b3d4c727f32195b0bc7025a48255543e1b33741a:src/App.js
 
   const openProject = (project, index = 0) => {
   const gallery = project.gallery && project.gallery.length
@@ -1422,6 +1430,7 @@ function App() {
           >
             <img
               src={ojt}
+<<<<<<< HEAD:src/App.jsx
               alt="OJT group photo"
               style={{
                 width: "100%",
@@ -1442,6 +1451,11 @@ function App() {
             >
               My Journey as a Developer
             </h2>
+=======
+              alt="group photo of us"
+              style={{ width: "100%", borderRadius: "10px" }}
+            />
+>>>>>>> b3d4c727f32195b0bc7025a48255543e1b33741a:src/App.js
           </div>
 
           {/* Timeline Sections */}
