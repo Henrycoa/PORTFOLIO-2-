@@ -7,26 +7,22 @@ import tesda from "./assets/tesda.png";
 import grab from "./assets/grab.png";
 import brgy from "./assets/sanguninang_kabataan.png";
 import ojt from "./assets/ojt.png";
-<<<<<<< HEAD:src/App.jsx
 import capstone from "./assets/capstone.png";
-=======
->>>>>>> b3d4c727f32195b0bc7025a48255543e1b33741a:src/App.js
+import college from "./assets/college.png";
+// import freelance from "./assets/freelance.png"; // Add this line
 import AOS from "aos";
 import "aos/dist/aos.css";
 
 function App() {
   const [typedText, setTypedText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
-<<<<<<< HEAD:src/App.jsx
-  const [activeFilter,] = useState("All");
   const [showPopup, setShowPopup] = useState(false);
   const [stars, setStars] = useState([]);
   const [showMouse, setShowMouse] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-=======
   const [activeFilter, setActiveFilter] = useState("All");
-  const [setSelectedProject] = useState(null);
->>>>>>> b3d4c727f32195b0bc7025a48255543e1b33741a:src/App.js
+  const [show, setShow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
 
   const openProject = (project, index = 0) => {
   const gallery = project.gallery && project.gallery.length
@@ -79,7 +75,7 @@ function App() {
       "/images/project1-1.jpg",
       "/images/project1-2.jpg"
     ],
-      technologies: ["React", "Bootsrap 5", "Laravel", "Mysql"],
+      technologies: ["JS", "Jquery", "Bootsrap 5", "PHP", "Laravel", "JWT", "Mysql"],
       category: "Full Stack",
       link: "#",
       github: "#",
@@ -111,7 +107,7 @@ function App() {
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+1",
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+2",
       ],
-      technologies: ["React", "PHP", "MySQL", "Firebase", "Google Maps API"],
+      technologies: ["Flutter", "PHP", "MySQL", "Firebase", "Google Console","Google auth", "Google Maps API"],
       category: "Mobile",
       link: "#",
       github: "#",
@@ -924,10 +920,26 @@ function App() {
 
     generateStars();
   }, []);
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > lastScrollY) {
+        // Nag-scroll pababa → show image
+        setShow(true);
+      } else {
+        // Nag-scroll pataas → hide image
+        setShow(false);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    useEffect(() => {
+      window.addEventListener("scroll", handleScroll);
+      return () => window.removeEventListener("scroll", handleScroll);
+    }, [lastScrollY]);
   return (
     <>
       <Navbar />
-        <section
+      <section
         data-id="1"
         className="hero text-white position-relative"
         id="home"
@@ -1248,10 +1260,12 @@ function App() {
             </g>
           </svg>
         </div>
-        </section>
-       {/* About Section */}
-       <section data-id="2" style={styles.aboutSection} id="aboutSection">
+      </section>
+
+      {/* About Section */}
+      <section data-id="2" style={styles.aboutSection} id="aboutSection">
         {/* Animated Starfield Background */}
+
         <div style={styles.starField}>
           {stars.map((star) => (
             <div
@@ -1394,21 +1408,53 @@ function App() {
           animation: star-sparkle 3.5s infinite ease-in-out;
         }
         `}</style>
-        </section>
-
-        <section
-          data-id="3"
-          id="about"
-          className="section-padding text-white"
-          style={{
-            padding: "70px 20px",
-            position: "relative",
-            overflow: "hidden",
-            background: "black",
-          }}
-        >
         <div style={{ height: "100vh" }}></div>
+        <div
+          className="elementor-element elementor-element-21baa8c elementor-widget elementor-widget-image elementor-motion-effects-parent animated"
+          data-id="21baa8c"
+          data-element_type="widget"
+          data-widget_type="image.default"
+          style={{ display: "flex", justifyContent: "center" }} // Center horizontally
+        >
+          <div
+            className="elementor-widget-container elementor-motion-effects-element"
+            style={{
+              opacity: show ? 1 : 0,
+              transition: "opacity 0.5s ease",
+              willChange: "opacity",
+            }}
+          >
+            <img
+              decoding="async"
+              width="300"
+              height="107"
+              src="https://mjcweb.dev/wp-content/uploads/2023/07/Shade-300x107.webp"
+              className="attachment-medium size-medium wp-image-2205"
+              alt=""
+              srcSet="
+            https://mjcweb.dev/wp-content/uploads/2023/07/Shade-300x107.webp 300w, 
+            https://mjcweb.dev/wp-content/uploads/2023/07/Shade-1024x364.webp 1024w, 
+            https://mjcweb.dev/wp-content/uploads/2023/07/Shade-768x273.webp 768w, 
+            https://mjcweb.dev/wp-content/uploads/2023/07/Shade-1536x546.webp 1536w, 
+            https://mjcweb.dev/wp-content/uploads/2023/07/Shade-2048x728.webp 2048w
+          "
+              sizes="(max-width: 300px) 100vw, 300px"
+            />
+          </div>
+        </div>
+      </section>
 
+      <section
+        data-id="3"
+        id="about"
+        className="section-padding text-white"
+        style={{
+          padding: "70px 20px",
+          position: "relative",
+          overflow: "hidden",
+          background: "black",
+        }}
+      >
         {/* Starry Background Layers */}
         <div className="stars"></div>
         <div className="twinkling"></div>
@@ -1430,7 +1476,6 @@ function App() {
           >
             <img
               src={ojt}
-<<<<<<< HEAD:src/App.jsx
               alt="OJT group photo"
               style={{
                 width: "100%",
@@ -1443,7 +1488,7 @@ function App() {
             <h2
               className="mt-4"
               style={{
-                color: "#FFD700",
+                color: "#EBD3F8",
                 fontWeight: "bold",
                 fontSize: "32px",
                 textShadow: "0 0 12px rgba(255, 215, 0, 0.8)",
@@ -1451,11 +1496,6 @@ function App() {
             >
               My Journey as a Developer
             </h2>
-=======
-              alt="group photo of us"
-              style={{ width: "100%", borderRadius: "10px" }}
-            />
->>>>>>> b3d4c727f32195b0bc7025a48255543e1b33741a:src/App.js
           </div>
 
           {/* Timeline Sections */}
@@ -1467,6 +1507,7 @@ function App() {
               desc2:
                 "College also taught me discipline, research, and problem-solving—skills that prepared me for real-world software challenges.",
               aos: "fade-right",
+              img: college,
               reverse: false,
             },
             {
@@ -1496,19 +1537,9 @@ function App() {
               desc2:
                 "Freelancing taught me project ownership, client communication, and adaptability. I also conducted code reviews and mentored junior developers, strengthening my leadership skills.",
               aos: "fade-left",
-              img: "freelance",
+              // img: freelance,
               reverse: true,
             },
-            // {
-            //   title: "🚀 Present (2024 – Now)",
-            //   desc1:
-            //     "Today, I am a 24-year-old full stack web developer specializing in building responsive, mobile-first applications.",
-            //   desc2:
-            //     "With expertise in React.js, Laravel, and MySQL, I focus on creating solutions that are functional, user-friendly, and visually appealing, while continuing to grow and contribute to impactful projects.",
-            //   aos: "fade-right",
-            //   img: "present",
-            //   reverse: false,
-            // },
           ].map((section, idx) => (
             <div
               key={idx}
@@ -1580,13 +1611,67 @@ function App() {
         }
 
         .highlight-scroll {
-          color: #FFD700;
+          color: #EBD3F8;
           font-weight: 600;
           text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
         }
       `}</style>
       </section>
-
+      {/* <section className="wave-divider">
+        <div
+          className="elementor-shape elementor-shape-top"
+          data-negative="false"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 1000 100"
+            preserveAspectRatio="none"
+          >
+            <path
+              className="elementor-shape-fill"
+              d="M421.9,6.5c22.6-2.5,51.5,0.4,75.5,5.3c23.6,4.9,70.9,23.5,100.5,35.7
+           c75.8,32.2,133.7,44.5,192.6,49.7c23.6,2.1,48.7,3.5,103.4-2.5c54.7-6,106.2-25.6,106.2-25.6V0H0v30.3
+           c0,0,72,32.6,158.4,30.5c39.2-0.7,92.8-6.7,134-22.4c21.2-8.1,52.2-18.2,79.7-24.2C399.3,7.9,411.6,7.5,421.9,6.5z"
+            />
+          </svg>
+        </div>
+      </section> */}
+      <section style={{ position: "relative" }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            overflow: "hidden",
+            lineHeight: 0,
+          }}
+        >
+          <svg
+            viewBox="0 0 1000 100"
+            preserveAspectRatio="none"
+            style={{ display: "block", width: "100%", height: "100px" }}
+          >
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop
+                  offset="0%"
+                  style={{ stopColor: "#667eea", stopOpacity: 1 }}
+                />
+                <stop
+                  offset="100%"
+                  style={{ stopColor: "#764ba2", stopOpacity: 1 }}
+                />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#grad1)" // Gradient
+              d="M421.9,6.5c22.6-2.5,51.5,0.4,75.5,5.3c23.6,4.9,70.9,23.5,100.5,35.7
+                c75.8,32.2,133.7,44.5,192.6,49.7c23.6,2.1,48.7,3.5,103.4-2.5c54.7-6,106.2-25.6,106.2-25.6V0H0v30.3c0,0,72,32.6,158.4,30.5
+                c39.2-0.7,92.8-6.7,134-22.4c21.2-8.1,52.2-18.2,79.7-24.2C399.3,7.9,411.6,7.5,421.9,6.5z"
+            />
+          </svg>
+        </div>
+      </section>
       {/* Projects Section */}
       <section
         data-id="4"
@@ -1680,88 +1765,102 @@ function App() {
               </div>
             </div>
           ))}
-       {selectedProject?.gallery && (
-        <div className="d-flex justify-content-center mt-3 flex-wrap">
-          {selectedProject.gallery.map((img, index) => (
-            <img
-              key={index}
-              src={img}  // ✅ gamitin yung current img sa gallery
-              alt={`${selectedProject.title}-thumb-${index}`} // ✅ mas descriptive
-              className={`m-1 rounded shadow-sm ${
-                index === currentIndex ? "border border-warning" : ""
-              }`}
-              style={{ width: "80px", height: "60px", objectFit: "cover", cursor: "pointer" }}
-              onClick={() => setCurrentIndex(index)} // ✅ papalitan lang index
-            />
-          ))}
-        </div>
-      )}
-
+          {selectedProject?.gallery && (
+            <div className="d-flex justify-content-center mt-3 flex-wrap">
+              {selectedProject.gallery.map((img, index) => (
+                <img
+                  key={index}
+                  src={img} // ✅ gamitin yung current img sa gallery
+                  alt={`${selectedProject.title}-thumb-${index}`} // ✅ mas descriptive
+                  className={`m-1 rounded shadow-sm ${
+                    index === currentIndex ? "border border-warning" : ""
+                  }`}
+                  style={{
+                    width: "80px",
+                    height: "60px",
+                    objectFit: "cover",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setCurrentIndex(index)} // ✅ papalitan lang index
+                />
+              ))}
+            </div>
+          )}
 
           {/* Modal for Images */}
 
-         {selectedProject && (
-        <div
-          className="modal show d-block"
-          tabIndex="-1"
-          style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
-        >
-          <div className="modal-dialog modal-xl modal-dialog-centered">
-            <div className="modal-content bg-dark text-white">
-              <div className="modal-header border-0">
-                <h5 className="modal-title">{selectedProject.title}</h5>
-                <button
-                  type="button"
-                  className="btn-close btn-close-white"
-                  onClick={closeProject}
-                ></button>
-              </div>
+          {selectedProject && (
+            <div
+              className="modal show d-block"
+              tabIndex="-1"
+              style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
+            >
+              <div className="modal-dialog modal-xl modal-dialog-centered">
+                <div className="modal-content bg-dark text-white">
+                  <div className="modal-header border-0">
+                    <h5 className="modal-title">{selectedProject.title}</h5>
+                    <button
+                      type="button"
+                      className="btn-close btn-close-white"
+                      onClick={closeProject}
+                    ></button>
+                  </div>
 
-              <div className="modal-body text-center">
-                {selectedProject?.gallery?.length > 0 && (
-                  <img
-                    src={selectedProject.gallery[currentIndex] || selectedProject.image}
-                    alt="project"
-                    className="img-fluid rounded"
-                    style={{ maxHeight: "70vh", objectFit: "contain" }}
-                  />
-                )}
+                  <div className="modal-body text-center">
+                    {selectedProject?.gallery?.length > 0 && (
+                      <img
+                        src={
+                          selectedProject.gallery[currentIndex] ||
+                          selectedProject.image
+                        }
+                        alt="project"
+                        className="img-fluid rounded"
+                        style={{ maxHeight: "70vh", objectFit: "contain" }}
+                      />
+                    )}
 
-                {/* Thumbnails */}
-                <div className="d-flex justify-content-center mt-3 flex-wrap">
-                  {selectedProject?.gallery?.map((img, index) => (
-                    <img
-                      key={index}
-                      src={img}
-                      alt={`thumb-${index}`}
-                      className={`m-1 rounded shadow-sm ${
-                        index === currentIndex ? "border border-warning" : ""
-                      }`}
-                      style={{
-                        width: "80px",
-                        height: "60px",
-                        objectFit: "cover",
-                        cursor: "pointer",
-                      }}
-                      onClick={() => setCurrentIndex(index)}
-                    />
-                  ))}
+                    {/* Thumbnails */}
+                    <div className="d-flex justify-content-center mt-3 flex-wrap">
+                      {selectedProject?.gallery?.map((img, index) => (
+                        <img
+                          key={index}
+                          src={img}
+                          alt={`thumb-${index}`}
+                          className={`m-1 rounded shadow-sm ${
+                            index === currentIndex
+                              ? "border border-warning"
+                              : ""
+                          }`}
+                          style={{
+                            width: "80px",
+                            height: "60px",
+                            objectFit: "cover",
+                            cursor: "pointer",
+                          }}
+                          onClick={() => setCurrentIndex(index)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="modal-footer justify-content-between border-0">
+                    <button
+                      className="btn btn-outline-light"
+                      onClick={prevImage}
+                    >
+                      ‹ Prev
+                    </button>
+                    <button
+                      className="btn btn-outline-light"
+                      onClick={nextImage}
+                    >
+                      Next ›
+                    </button>
+                  </div>
                 </div>
               </div>
-
-              <div className="modal-footer justify-content-between border-0">
-                <button className="btn btn-outline-light" onClick={prevImage}>
-                  ‹ Prev
-                </button>
-                <button className="btn btn-outline-light" onClick={nextImage}>
-                  Next ›
-                </button>
-              </div>
             </div>
-          </div>
-        </div>
-      )}
-
+          )}
         </div>
 
         {/* Styles */}
@@ -1838,6 +1937,43 @@ function App() {
     } 
   `}</style>
       </section>
+      <section style={{ position: "relative" }}>
+        <div
+          style={{
+            position: "absolute",
+            bottom: 0,
+            width: "100%",
+            overflow: "hidden",
+            lineHeight: 0,
+            transform: "scaleY(-1)", // Flip upside down
+          }}
+        >
+          <svg
+            viewBox="0 0 1000 100"
+            preserveAspectRatio="none"
+            style={{ display: "block", width: "100%", height: "100px" }}
+          >
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop
+                  offset="0%"
+                  style={{ stopColor: "#667eea", stopOpacity: 1 }}
+                />
+                <stop
+                  offset="100%"
+                  style={{ stopColor: "#764ba2", stopOpacity: 1 }}
+                />
+              </linearGradient>
+            </defs>
+            <path
+              fill="url(#grad1)"
+              d="M421.9,6.5c22.6-2.5,51.5,0.4,75.5,5.3c23.6,4.9,70.9,23.5,100.5,35.7
+           c75.8,32.2,133.7,44.5,192.6,49.7c23.6,2.1,48.7,3.5,103.4-2.5c54.7-6,106.2-25.6,106.2-25.6V0H0v30.3c0,0,72,32.6,158.4,30.5
+           c39.2-0.7,92.8-6.7,134-22.4c21.2-8.1,52.2-18.2,79.7-24.2C399.3,7.9,411.6,7.5,421.9,6.5z"
+            />
+          </svg>
+        </div>
+      </section>
 
       <section
         id="testimonials"
@@ -1884,7 +2020,6 @@ function App() {
           </div>
         </div>
       </section>
-
       <section
         data-id="5"
         id="testimonials"
@@ -1955,7 +2090,6 @@ function App() {
         </div>
       </section>
       {/* Testimonials Section */}
-
       {/* Contact Section */}
       <section id="contact" className="section-padding bg-black text-white">
         <div className="container">
@@ -2090,7 +2224,6 @@ function App() {
           {/* Text Info with Fade Animations */}
         </div>
       </section>
-
       {/* Floating Resume Button */}
       <a
         href="/resume.pdf"
