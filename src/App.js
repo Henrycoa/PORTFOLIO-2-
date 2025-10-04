@@ -20,41 +20,38 @@ function App() {
   const [stars, setStars] = useState([]);
   const [showMouse, setShowMouse] = useState(false);
   const [selectedProject, setSelectedProject] = useState(null);
-  const [activeFilter, setActiveFilter] = useState("All");
+  const [activeFilter,] = useState("All");
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  const openProject = (project, index = 0) => {
-  const gallery = project.gallery && project.gallery.length
-    ? project.gallery
-    : [project.image]; // fallback kung walang gallery
-  
-  setSelectedProject({ ...project, gallery });
-  setCurrentIndex(index);
+ const openProject = (project, index) => {
+    setSelectedProject(project);
+    setCurrentIndex(index);
   };
 
-
-
+  // ✅ Close modal
   const closeProject = () => {
     setSelectedProject(null);
     setCurrentIndex(0);
   };
 
-  const prevImage = () => {
-    if (selectedProject) {
-      setCurrentIndex((prev) =>
-        prev === 0 ? selectedProject.gallery.length - 1 : prev - 1
-      );
-    }
+  // ✅ Image navigation
+  const nextImage = () => {
+    if (!selectedProject?.gallery) return;
+    setCurrentIndex((prev) => (prev + 1) % selectedProject.gallery.length);
   };
 
-  const nextImage = () => {
-    if (selectedProject) {
-      setCurrentIndex((prev) =>
-        prev === selectedProject.gallery.length - 1 ? 0 : prev + 1
-      );
-    }
-  };
+  const prevImage = () => {
+    if (!selectedProject?.gallery) return;
+    setCurrentIndex(
+      (prev) =>
+        (prev - 1 + selectedProject.gallery.length) %
+        selectedProject.gallery.length
+    );
+  }
+
+ 
+
   const roles = [
     "Frontend Developer",
     "Full Stack Developer",
@@ -64,35 +61,15 @@ function App() {
 
   const projects = [
     {
-      title: "Social Service and Welfare Management System",
+      title: "Social Service & Welfare Management System",
       description:
-        "A full-stack system for managing social welfare services, beneficiary records, and assistance requests.",
-      fullDescription:
-        "The Social Service and Welfare Management System (SSWMS) is designed to streamline the operations of local government units in providing welfare services. It enables efficient handling of beneficiary applications, assistance distribution, case management, and reporting. The platform also provides dashboards for social workers and administrators, ensuring transparency and accountability in service delivery.",
+        "An integrated system for LGU social services with AI DSS and dynamic PHP backend.",
+      category: "Web App",
+      technologies: ["React", "Bootstrap", "PHP", "MySQL"],
       image: sswmsimage,
-       gallery: [
-      "/images/project1.jpg",
-      "/images/project1-1.jpg",
-      "/images/project1-2.jpg"
-    ],
-      technologies: ["JS", "Jquery", "Bootsrap 5", "PHP", "Laravel", "JWT", "Mysql"],
-      category: "Full Stack",
-      link: "#",
-      github: "#",
-      features: [
-        "Beneficiary profiling and household information management",
-        "Assistance request and approval workflows",
-        "Case management and monitoring by social workers",
-        "Automated generation of reports and certificates",
-        "Notification system for application status updates",
-        "Admin dashboard with service analytics and statistics",
-        "Integration with census and civil registrar modules",
-        "Mobile-friendly responsive design",
-      ],
-      challenges:
-        "Designing a secure and scalable workflow for handling large volumes of beneficiary data while ensuring data privacy and real-time updates across different welfare services.",
-      duration: "4 months",
-      teamSize: "5 developers",
+      link: "http://www.henry.gt.tc/sswms/?i=1",
+      github: "https://github.com/Henrycoa/capstone-sswms",
+      gallery: ["assets/img/sswms1.png", "assets/img/sswms2.png"],
     },
 
     {
@@ -107,9 +84,17 @@ function App() {
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+1",
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+2",
       ],
-      technologies: ["Flutter", "PHP", "MySQL", "Firebase", "Google Console","Google auth", "Google Maps API"],
+      technologies: [
+        "Flutter",
+        "PHP",
+        "MySQL",
+        "Firebase",
+        "Google Console",
+        "Google auth",
+        "Google Maps API",
+      ],
       category: "Mobile",
-      link: "#",
+      link: "http://www.henry.gt.tc/sswms/?i=1",
       github: "#",
       features: [
         "Real-time GPS tracking for deliveries and rides",
@@ -201,7 +186,7 @@ function App() {
         sswmsimage,
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+1",
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+2",
-      ],  
+      ],
       technologies: ["React", "Bootstrap", "Node.js", "MySQL"],
       category: "Fullstack",
       link: "#",
@@ -1690,7 +1675,6 @@ function App() {
                 Explore some of my latest work. Click on a project image to view
                 it in detail.
               </p>
-              {/* ❌ Removed Close button */}
             </div>
           )}
 
@@ -1709,11 +1693,9 @@ function App() {
                   <img
                     src={project.image}
                     alt={project.title}
-                    className="img-fluid rounded shadow-sm"
-                    style={{ cursor: "pointer" }}
+                    className="img-fluid rounded shadow-sm project-img"
                     onClick={() => openProject(project, 0)}
                   />
-
                   <div className="img-overlay d-flex justify-content-center align-items-center">
                     <span className="text-warning fw-bold">
                       Click to Enlarge
@@ -1734,7 +1716,7 @@ function App() {
                 <h3 className="fw-bold">{project.title}</h3>
                 <p className="text-light">{project.description}</p>
 
-                {/* Tech stack */}
+                {/* Tech Stack */}
                 <div className="mb-3">
                   {project.technologies.map((tech, idx) => (
                     <span key={idx} className="badge bg-secondary me-2 mb-2">
@@ -1745,50 +1727,32 @@ function App() {
 
                 {/* Buttons */}
                 <div className="d-flex gap-2">
-                  <a
-                    href={project.link}
-                    className="btn btn-warning"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <i className="bi bi-eye"></i> Live Demo
-                  </a>
-                  <a
-                    href={project.github}
-                    className="btn btn-outline-light"
-                    target="_blank"
-                    rel="noreferrer"
-                  >
-                    <i className="bi bi-github"></i> Code
-                  </a>
+                  {project.link && project.link !== "#" && (
+                    <a
+                      href={project.link}
+                      className="btn btn-warning"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <i className="bi bi-eye"></i> Live Demo
+                    </a>
+                  )}
+                  {project.github && project.github !== "#" && (
+                    <a
+                      href={project.github}
+                      className="btn btn-outline-light"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      <i className="bi bi-github"></i> Code
+                    </a>
+                  )}
                 </div>
               </div>
             </div>
           ))}
-          {selectedProject?.gallery && (
-            <div className="d-flex justify-content-center mt-3 flex-wrap">
-              {selectedProject.gallery.map((img, index) => (
-                <img
-                  key={index}
-                  src={img} // ✅ gamitin yung current img sa gallery
-                  alt={`${selectedProject.title}-thumb-${index}`} // ✅ mas descriptive
-                  className={`m-1 rounded shadow-sm ${
-                    index === currentIndex ? "border border-warning" : ""
-                  }`}
-                  style={{
-                    width: "80px",
-                    height: "60px",
-                    objectFit: "cover",
-                    cursor: "pointer",
-                  }}
-                  onClick={() => setCurrentIndex(index)} // ✅ papalitan lang index
-                />
-              ))}
-            </div>
-          )}
 
-          {/* Modal for Images */}
-
+          {/* Modal */}
           {selectedProject && (
             <div
               className="modal show d-block"
@@ -1863,80 +1827,63 @@ function App() {
           )}
         </div>
 
-        {/* Styles */}
+        {/* Inline Styles */}
         <style>{`
-    .section-padding {
-      padding: 80px 0;
-    }
+        .section-padding {
+          padding: 80px 0;
+        }
 
-    /* Popup Gradient */
-    .popup-container {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      animation: popInBounce 0.7s ease forwards;
-    }
+        .popup-container {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          animation: popInBounce 0.7s ease forwards;
+        }
 
-    /* Popup Animation */
-    @keyframes popInBounce {
-      0% { transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); opacity: 0; }
-      50% { transform: translate(-50%, -50%) scale(1.05) rotate(2deg); opacity: 0.9; }
-      100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-    }
+        @keyframes popInBounce {
+          0% { transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); opacity: 0; }
+          50% { transform: translate(-50%, -50%) scale(1.05) rotate(2deg); opacity: 0.9; }
+          100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
+        }
 
-    /* Project Hover Effect */
-    .project-card:hover {
-      transform: translateY(-6px);
-      transition: transform 0.3s ease;
-    }
+        .project-card:hover {
+          transform: translateY(-6px);
+          transition: transform 0.3s ease;
+        }
 
-    .project-img-wrapper {
-      position: relative;
-      overflow: hidden;
-      border-radius: 12px;
-    }
+        .project-img-wrapper {
+          position: relative;
+          overflow: hidden;
+          border-radius: 12px;
+        }
 
-    .project-img {
-      height: 350px;
-      width: 100%;
-      object-fit: cover;
-      cursor: pointer;
-      transition: transform 0.4s ease;
-    }
+        .project-img {
+          height: 350px;
+          width: 100%;
+          object-fit: cover;
+          cursor: pointer;
+          transition: transform 0.4s ease;
+        }
 
-    .project-img-wrapper:hover .project-img {
-      transform: scale(1.05);
-    }
+        .project-img-wrapper:hover .project-img {
+          transform: scale(1.05);
+        }
 
-    .img-overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      opacity: 0;
-      transition: opacity 0.3s ease;
-      border-radius: 12px;
-    }
+        .img-overlay {
+          position: absolute;
+          top: 0; left: 0;
+          width: 100%; height: 100%;
+          background: rgba(0,0,0,0.5);
+          opacity: 0;
+          transition: opacity 0.3s ease;
+          border-radius: 12px;
+        }
 
-    .project-img-wrapper:hover .img-overlay {
-      opacity: 1;
-    }
-
-    /* Custom Modal */
-    .custom-modal {
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.85);
-      z-index: 1060;
-      animation: fadeIn 0.4s ease;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    } 
-  `}</style>
+        .project-img-wrapper:hover .img-overlay {
+          opacity: 1;
+        }
+      `}</style>
       </section>
+
       <section style={{ position: "relative" }}>
         <div
           style={{
@@ -2358,14 +2305,9 @@ function App() {
         </div>
       </footer>
       {/* Bootstrap Icons CDN */}
-      <link
-        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.0/font/bootstrap-icons.min.css"
-        rel="stylesheet"
-      />
+    
       {/* Bootstrap JS */}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       {/* AOS JS */}
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
     </>
   );
   }
