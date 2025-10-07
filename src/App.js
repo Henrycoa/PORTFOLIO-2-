@@ -1967,6 +1967,7 @@ function App() {
           </div>
         </div>
       </section>
+
       <section
         data-id="5"
         id="testimonials"
@@ -2046,16 +2047,16 @@ function App() {
               Get In Touch
             </h2>
             <p className="lead text-gray-300">
-              Ready to start your next project? Let’s discuss how I can help.
+              Ready to start your next project? Let's discuss how I can help.
             </p>
           </div>
 
-          {/* Contact Form */}
-          <div className="row justify-content-center">
-            <div className="col-lg-8">
+          <div className="row g-4">
+            {/* Contact Form */}
+            <div className="col-lg-6">
               <div
-                className="contact-form bg-dark p-5 rounded-3 shadow-lg"
-                data-aos="fade-up"
+                className="contact-form bg-dark p-5 rounded-3 shadow-lg h-100"
+                data-aos="fade-right"
                 data-aos-delay="200"
               >
                 <form>
@@ -2104,15 +2105,36 @@ function App() {
                 </form>
               </div>
             </div>
+
+            {/* Map */}
+            <div className="col-lg-6">
+              <div
+                className="map-container rounded-3 shadow-lg overflow-hidden h-100"
+                data-aos="fade-left"
+                data-aos-delay="200"
+                style={{ minHeight: "500px" }}
+              >
+                <iframe
+                  src="https://maps.google.com/maps?q=Pabahay+2000+Elementary+School&output=embed"
+                  width="100%"
+                  height="100%"
+                  style={{ border: 0, minHeight: "500px" }}
+                  allowFullScreen=""
+                  loading="lazy"
+                  referrerPolicy="no-referrer-when-downgrade"
+                  title="Location Map"
+                ></iframe>
+              </div>
+            </div>
           </div>
 
-          {/* Contact Info - Dark Cards */}
-          <div className="row mt-5">
+          {/* Contact Info Cards */}
+          <div className="row mt-5 g-4">
             {[
               {
                 icon: "bi-geo-alt-fill",
                 title: "Location",
-                text: "Manila, Philippines",
+                text: "Pabahay 2000 Elementary School",
               },
               {
                 icon: "bi-envelope-fill",
@@ -2127,14 +2149,14 @@ function App() {
             ].map((info, index) => (
               <div
                 key={index}
-                className="col-md-4 text-center mb-4"
+                className="col-md-4 text-center"
                 data-aos="fade-up"
                 data-aos-delay={100 * (index + 1)}
               >
-                <div className="card bg-dark text-white border-0 shadow-lg p-4 rounded-3 h-100">
+                <div className="card bg-dark text-white border-0 shadow-lg p-4 rounded-3 h-100 hover-lift transition">
                   <i className={`bi ${info.icon} text-warning fs-1 mb-3`}></i>
                   <h5 className="fw-bold">{info.title}</h5>
-                  <p className="text-gray-400">{info.text}</p>
+                  <p className="text-gray-400 mb-0">{info.text}</p>
                 </div>
               </div>
             ))}
@@ -2142,7 +2164,7 @@ function App() {
 
           {/* Social Links */}
           <div
-            className="text-center mt-5"
+            className="text-center mt-5 pt-4 border-top border-secondary"
             data-aos="zoom-in"
             data-aos-delay="400"
           >
@@ -2161,24 +2183,24 @@ function App() {
                   target="_blank"
                   rel="noreferrer"
                   className="text-white hover:text-warning transition"
+                  style={{ transition: "color 0.3s ease" }}
                 >
                   <i className={`bi ${social.icon}`}></i>
                 </a>
               ))}
             </div>
           </div>
-
-          {/* Text Info with Fade Animations */}
         </div>
       </section>
       {/* Floating Resume Button */}
-      <a
-        href="/resume.pdf"
-        download="My_Resume.pdf"
-        className={`resume-btn pos-${section}`}
-      >
-        📄 Download Resume
-      </a>
+        <a
+      href="/resume.pdf"
+      download="Henry_Buena_Resume.pdf"
+      className={`resume-btn pos-${section}`}
+    >
+      📄 Download Resume
+    </a>
+
       {/* Footer */}
       <footer className="bg-dark text-white pt-5 pb-3">
         <div className="container">
@@ -2275,11 +2297,11 @@ function App() {
               <ul className="list-unstyled">
                 <li className="mb-2">
                   <i className="bi bi-geo-alt-fill me-2"></i>
-                  Manila, Philippines
+                  Bulacan, Philippines
                 </li>
                 <li className="mb-2">
                   <i className="bi bi-envelope-fill me-2"></i>
-                  Henryco@example.com
+                  Henrybuena052@gmail.com
                 </li>
                 <li className="mb-2">
                   <i className="bi bi-phone-fill me-2"></i>
@@ -2305,7 +2327,7 @@ function App() {
         </div>
       </footer>
       {/* Bootstrap Icons CDN */}
-    
+
       {/* Bootstrap JS */}
       {/* AOS JS */}
     </>
