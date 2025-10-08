@@ -19,38 +19,49 @@ function App() {
   const [showPopup, setShowPopup] = useState(false);
   const [stars, setStars] = useState([]);
   const [showMouse, setShowMouse] = useState(false);
-  const [selectedProject, setSelectedProject] = useState(null);
-  const [activeFilter,] = useState("All");
   const [show, setShow] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  // Before your return() in App.js
+  const [activeFilter, setActiveFilter] = useState("All");
+  const [selectedProject] = useState(null);
 
- const openProject = (project, index) => {
-    setSelectedProject(project);
-    setCurrentIndex(index);
-  };
-
-  // ✅ Close modal
-  const closeProject = () => {
-    setSelectedProject(null);
-    setCurrentIndex(0);
-  };
-
-  // ✅ Image navigation
-  const nextImage = () => {
-    if (!selectedProject?.gallery) return;
-    setCurrentIndex((prev) => (prev + 1) % selectedProject.gallery.length);
-  };
-
+  const [setActiveProject] = useState(null);
+  const [setCurrentImageIndex] = useState(0);
+  const images = [
+    "/images/project1.jpg",
+    "/images/project2.jpg",
+    "/images/project3.jpg",
+  ];
   const prevImage = () => {
-    if (!selectedProject?.gallery) return;
-    setCurrentIndex(
-      (prev) =>
-        (prev - 1 + selectedProject.gallery.length) %
-        selectedProject.gallery.length
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? images.length - 1 : prevIndex - 1
     );
-  }
+  };
 
- 
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  const openProject = (projectId) => {
+    setActiveProject(projectId);
+  };
+
+  const closeProject = () => {
+    setActiveProject(null);
+  };
+  useEffect(() => {
+    const generatedStars = Array.from({ length: 50 }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 2 + 1,
+      animationDuration: Math.random() * 3 + 2,
+      animationDelay: Math.random() * 2,
+    }));
+    setStars(generatedStars);
+  }, []);
 
   const roles = [
     "Frontend Developer",
@@ -125,7 +136,7 @@ function App() {
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+2",
       ],
       technologies: ["React", "PHP", "MySQL", "Bootstrap", "Firebase"],
-      category: "Governance",
+      category: "Web App",
       link: "#",
       github: "#",
       features: [
@@ -156,7 +167,7 @@ function App() {
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+2",
       ],
       technologies: ["React", "PHP", "MySQL", "Bootstrap", "Firebase"],
-      category: "Governance",
+      category: "Web App",
       link: "#",
       github: "#",
       features: [
@@ -188,7 +199,7 @@ function App() {
         "https://via.placeholder.com/1200x800?text=SSWMS+Screenshot+2",
       ],
       technologies: ["React", "Bootstrap", "Node.js", "MySQL"],
-      category: "Fullstack",
+      category: "Web App",
       link: "#",
       github: "#",
       features: [
@@ -215,7 +226,7 @@ function App() {
       image:
         "https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=400&h=300&fit=crop",
       technologies: ["React", "Firebase", "Material-UI", "Chart.js"],
-      category: "Full Stack",
+      category: "Web App",
       link: "#",
       github: "#",
       features: [
@@ -242,7 +253,7 @@ function App() {
       image:
         "https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?w=400&h=300&fit=crop",
       technologies: ["React", "D3.js", "Weather API", "Bootstrap"],
-      category: "Frontend",
+      category: "Web App",
       link: "#",
       github: "#",
       features: [
@@ -269,7 +280,7 @@ function App() {
       image:
         "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=400&h=300&fit=crop",
       technologies: ["React", "Laravel", "MySQL", "WebRTC"],
-      category: "Full Stack",
+      category: "Web App",
       link: "#",
       github: "#",
       features: [
@@ -369,7 +380,7 @@ function App() {
 
     return () => observer.disconnect();
   }, []);
-  
+
   useEffect(() => {
     setCurrentIndex(0);
   }, [selectedProject]);
@@ -822,7 +833,7 @@ function App() {
     },
   };
 
-
+  
   useEffect(() => {
     AOS.init({ once: false, duration: 1000 });
 
@@ -838,7 +849,6 @@ function App() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const [selectedImage, setSelectedImage] = useState(null);
   const [section, setSection] = useState(1);
 
   useEffect(() => {
@@ -887,7 +897,7 @@ function App() {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [showPopup]);
-   useEffect(() => {
+  useEffect(() => {
     const generateStars = () => {
       const starArray = [];
       for (let i = 0; i < 200; i++) {
@@ -905,22 +915,22 @@ function App() {
 
     generateStars();
   }, []);
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY) {
-        // Nag-scroll pababa → show image
-        setShow(true);
-      } else {
-        // Nag-scroll pataas → hide image
-        setShow(false);
-      }
-      setLastScrollY(currentScrollY);
-    };
+  const handleScroll = () => {
+    const currentScrollY = window.scrollY;
+    if (currentScrollY > lastScrollY) {
+      // Nag-scroll pababa → show image
+      setShow(true);
+    } else {
+      // Nag-scroll pataas → hide image
+      setShow(false);
+    }
+    setLastScrollY(currentScrollY);
+  };
 
-    useEffect(() => {
-      window.addEventListener("scroll", handleScroll);
-      return () => window.removeEventListener("scroll", handleScroll);
-    }, [lastScrollY]);
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
   return (
     <>
       <Navbar />
@@ -937,11 +947,9 @@ function App() {
         >
           {/* Background Gradient Overlay with AOS */}
           <div
-            className="position-absolute w-100 h-100"
+            className="position-absolute w-100 h-100 gradient-overlay"
             data-aos="fade-in"
             data-aos-duration="1500"
-            data-aos-anchor-placement="top-bottom"
-            data-aos-mirror="true"
             style={{
               background:
                 "linear-gradient(135deg, rgba(255, 193, 7, 0.1) 0%, rgba(0, 123, 255, 0.1) 100%)",
@@ -949,15 +957,12 @@ function App() {
             }}
           ></div>
 
-          {/* Floating Background Shapes with Enhanced AOS */}
+          {/* Floating Background Shapes with Enhanced Animations */}
           <div
-            className="position-absolute"
+            className="floating-shape shape-1"
             data-aos="fade-up"
             data-aos-duration="1200"
             data-aos-delay="200"
-            data-aos-anchor-placement="top-center"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               top: "10%",
               left: "10%",
@@ -966,18 +971,14 @@ function App() {
               background: "rgba(255, 193, 7, 0.1)",
               borderRadius: "50%",
               zIndex: 1,
-              transition: "all 0.3s ease",
             }}
           ></div>
 
           <div
-            className="position-absolute"
+            className="floating-shape shape-2"
             data-aos="fade-down"
             data-aos-duration="1000"
             data-aos-delay="400"
-            data-aos-anchor-placement="center-bottom"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               top: "20%",
               right: "15%",
@@ -987,18 +988,14 @@ function App() {
               borderRadius: "20px",
               transform: "rotate(45deg)",
               zIndex: 1,
-              transition: "all 0.3s ease",
             }}
           ></div>
 
           <div
-            className="position-absolute"
+            className="floating-shape shape-3"
             data-aos="slide-right"
             data-aos-duration="1300"
             data-aos-delay="600"
-            data-aos-anchor-placement="bottom-center"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               bottom: "30%",
               left: "5%",
@@ -1007,18 +1004,14 @@ function App() {
               background: "rgba(255, 193, 7, 0.15)",
               borderRadius: "10px",
               zIndex: 1,
-              transition: "all 0.3s ease",
             }}
           ></div>
 
           <div
-            className="position-absolute"
+            className="floating-shape shape-4"
             data-aos="slide-left"
             data-aos-duration="1100"
             data-aos-delay="800"
-            data-aos-anchor-placement="bottom-bottom"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               bottom: "10%",
               right: "10%",
@@ -1027,19 +1020,15 @@ function App() {
               background: "rgba(0, 123, 255, 0.08)",
               borderRadius: "50%",
               zIndex: 1,
-              transition: "all 0.3s ease",
             }}
           ></div>
 
-          {/* Animated Lines/Particles with Enhanced Scroll Response */}
+          {/* Animated Lines/Particles */}
           <div
-            className="position-absolute"
+            className="animated-line line-1"
             data-aos="zoom-in-up"
             data-aos-duration="900"
             data-aos-delay="300"
-            data-aos-anchor-placement="center-center"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               top: "40%",
               left: "20%",
@@ -1048,18 +1037,15 @@ function App() {
               background:
                 "linear-gradient(to bottom, rgba(255, 193, 7, 0.3), transparent)",
               zIndex: 1,
-              transition: "all 0.4s ease",
             }}
           ></div>
 
           <div
-            className="position-absolute"
+            className="animated-line line-2"
             data-aos="zoom-in-down"
             data-aos-duration="1100"
             data-aos-delay="500"
-            data-aos-anchor-placement="top-center"
-            data-aos-mirror="true"
-            data-aos-once="false"
+
             style={{
               top: "15%",
               right: "25%",
@@ -1069,19 +1055,16 @@ function App() {
                 "linear-gradient(to bottom, rgba(0, 123, 255, 0.3), transparent)",
               transform: "rotate(30deg)",
               zIndex: 1,
-              transition: "all 0.4s ease",
+
             }}
           ></div>
 
-          {/* Additional Floating Elements for More Dynamic Effect */}
+          {/* Additional Floating Elements */}
           <div
-            className="position-absolute"
+            className="floating-shape shape-5"
             data-aos="flip-up"
             data-aos-duration="1400"
             data-aos-delay="700"
-            data-aos-anchor-placement="center-bottom"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               top: "60%",
               left: "80%",
@@ -1090,18 +1073,14 @@ function App() {
               background: "rgba(255, 193, 7, 0.2)",
               borderRadius: "50%",
               zIndex: 1,
-              transition: "all 0.3s ease",
             }}
           ></div>
 
           <div
-            className="position-absolute"
+            className="floating-shape shape-6"
             data-aos="flip-down"
             data-aos-duration="1200"
             data-aos-delay="900"
-            data-aos-anchor-placement="bottom-center"
-            data-aos-mirror="true"
-            data-aos-once="false"
             style={{
               top: "70%",
               left: "15%",
@@ -1111,7 +1090,35 @@ function App() {
               borderRadius: "5px",
               transform: "rotate(20deg)",
               zIndex: 1,
-              transition: "all 0.3s ease",
+            }}
+          ></div>
+
+          {/* Extra Decorative Particles */}
+          <div
+            className="particle particle-1"
+            style={{
+              top: "25%",
+              left: "45%",
+              width: "8px",
+              height: "8px",
+            }}
+          ></div>
+          <div
+            className="particle particle-2"
+            style={{
+              top: "55%",
+              left: "60%",
+              width: "6px",
+              height: "6px",
+            }}
+          ></div>
+          <div
+            className="particle particle-3"
+            style={{
+              top: "80%",
+              left: "40%",
+              width: "10px",
+              height: "10px",
             }}
           ></div>
         </div>
@@ -1126,36 +1133,49 @@ function App() {
               <img
                 src={henryImage}
                 alt="Profile"
-                className="rounded-circle mb-4 border border-5 border-warning animate__animated animate__zoomIn animate__delay-1s"
+                className="profile-image rounded-circle mb-4 border border-5 border-warning"
                 style={{
                   width: "200px",
                   height: "300px",
                   objectFit: "cover",
                 }}
+                data-aos="zoom-in"
+                data-aos-delay="300"
               />
 
-              <h1 className="display-4 fw-bold mb-3">
-                Hi, I'm <span className="text-warning">Henryco Buena</span>
+              <h1
+                className="display-4 fw-bold mb-3"
+                data-aos="fade-up"
+                data-aos-delay="400"
+              >
+                Hi, I'm{" "}
+                <span className="text-warning name-highlight">
+                  Henryco Buena
+                </span>
               </h1>
-              <h2 className="h3 mb-4">
+              <h2 className="h3 mb-4" data-aos="fade-up" data-aos-delay="500">
                 I'm a <span className="text-warning">{typedText}</span>
                 <span className="typing-cursor">|</span>
               </h2>
-              <p className="lead mb-4">
+              <p className="lead mb-4" data-aos="fade-up" data-aos-delay="600">
                 Passionate about creating digital experiences that make a
                 difference. I build modern, responsive, and user-friendly
                 applications.
               </p>
-              <div className="d-flex gap-3 flex-wrap">
+              <div
+                className="d-flex gap-3 flex-wrap"
+                data-aos="fade-up"
+                data-aos-delay="700"
+              >
                 <a
                   href="#projects"
-                  className="btn btn-warning btn-lg px-4 py-2 rounded-pill animate__animated animate__pulse animate__infinite animate__slow"
+                  className="btn btn-warning btn-lg px-4 py-2 rounded-pill cta-button"
                 >
                   View My Work
                 </a>
                 <a
                   href="#contact"
-                  className="btn btn-outline-light btn-lg px-4 py-2 rounded-pill"
+                  className="btn btn-outline-light btn-lg px-4 py-2 rounded-pill cta-button-outline"
                 >
                   Get In Touch
                 </a>
@@ -1168,13 +1188,17 @@ function App() {
               data-aos-duration="1000"
               data-aos-delay="200"
             >
-              <div className="position-relative">
+              <div className="position-relative image-container">
                 <img
                   src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=500&h=400&fit=crop"
                   alt="Coding"
-                  className="img-fluid rounded-3 shadow-lg animate__animated animate__fadeInUp animate__delay-2s"
+                  className="img-fluid rounded-3 shadow-lg hero-image"
                   style={{ maxWidth: "500px" }}
+                  data-aos="zoom-in"
+                  data-aos-delay="500"
                 />
+                {/* Glowing Border Effect */}
+                <div className="image-glow"></div>
               </div>
             </div>
           </div>
@@ -1193,9 +1217,12 @@ function App() {
             opacity: showMouse ? 1 : 0,
             transition: "opacity 0.6s ease-in-out",
           }}
+          data-aos="fade-up"
+          data-aos-delay="1000"
         >
           {/* Scroll Down Text */}
           <div
+            className="scroll-text"
             style={{
               color: "white",
               fontSize: "14px",
@@ -1245,8 +1272,222 @@ function App() {
             </g>
           </svg>
         </div>
-      </section>
 
+        <style>{`
+        .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        position: relative;
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+      }
+
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="90" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100%" height="100%" fill="url(%23grain)"/></svg>');
+        animation: float 20s ease-in-out infinite;
+      }
+
+      /* Profile Image */
+      .hero .rounded-circle {
+        width: 200px;
+        height: 200px;
+        object-fit: cover;
+        margin: 0 auto;
+        display: block;
+      }
+
+      /* Typing cursor animation */
+      .typing-cursor {
+        animation: blink 1s infinite;
+      }
+
+      @keyframes blink {
+
+        0%,
+        50% {
+          opacity: 1;
+        }
+
+        51%,
+        100% {
+          opacity: 0;
+        }
+      }
+
+      /* Mouse scroll indicator animation */
+      .mouse-svg .scroll-wheel {
+        animation: scroll-animation 1.5s ease-in-out infinite;
+      }
+
+      @keyframes scroll-animation {
+
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+
+        50% {
+          transform: translateY(6px);
+        }
+      }
+
+      /* ===== HERO RESPONSIVE STYLES ===== */
+
+      /* Desktop (992px and up) */
+      @media (min-width: 992px) {
+        .hero .container {
+          padding: 2rem;
+        }
+
+        .hero h1.display-4 {
+          font-size: 3.5rem;
+        }
+
+        .hero h2.h3 {
+          font-size: 2rem;
+        }
+
+        .hero .lead {
+          font-size: 1.25rem;
+        }
+
+        .hero .rounded-circle {
+          width: 200px;
+          height: 200px;
+          margin: 0 0 1.5rem 0;
+        }
+      }
+
+      /* Tablet (768px to 991px) */
+      @media (min-width: 768px) and (max-width: 991px) {
+        .hero {
+          min-height: 100vh;
+          padding: 2rem 0;
+        }
+
+        .hero h1.display-4 {
+          font-size: 2.5rem;
+        }
+
+        .hero h2.h3 {
+          font-size: 1.5rem;
+        }
+
+        .hero .lead {
+          font-size: 1.1rem;
+        }
+
+        .hero .rounded-circle {
+          width: 180px;
+          height: 180px;
+          margin: 0 auto 1.5rem;
+        }
+
+        .hero .col-lg-6 {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .hero .col-lg-6:last-child img {
+          max-width: 400px;
+        }
+
+        .hero .position-absolute[data-aos] {
+          transform: scale(0.8) !important;
+        }
+
+        .hero .d-flex.gap-3 {
+          justify-content: center;
+        }
+
+        .hero-container {
+          grid-template-columns: 1fr !important;
+          text-align: center;
+          gap: 2rem !important;
+        }
+
+        .nav-links {
+          display: none !important;
+        }
+      }
+
+      /* Mobile (576px to 767px) */
+      @media (min-width: 576px) and (max-width: 767px) {
+        .hero {
+          min-height: 100vh;
+          padding: 3rem 0 2rem;
+        }
+
+        .hero h1.display-4 {
+          font-size: 2rem;
+          text-align: center;
+        }
+
+        .hero h2.h3 {
+          font-size: 1.3rem;
+          text-align: center;
+        }
+
+        .hero .lead {
+          font-size: 1rem;
+          text-align: center;
+        }
+
+        .hero .rounded-circle {
+          width: 150px;
+          height: 150px;
+          margin: 0 auto 1.5rem;
+        }
+
+        .hero .col-lg-6 {
+          text-align: center;
+          margin-bottom: 2rem;
+        }
+
+        .hero .d-flex.gap-3 {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .hero .btn {
+          width: 100%;
+          max-width: 300px;
+        }
+
+        .hero .col-lg-6:last-child {
+          display: none;
+        }
+
+        .hero .position-absolute[data-aos] {
+          transform: scale(0.6) !important;
+          opacity: 0.5;
+        }
+
+        .hero__bottom--mouse-container {
+          bottom: 10px;
+        }
+
+        .hero__bottom--mouse-container svg {
+          width: 30px;
+          height: 50px;
+        }
+
+        .hero__bottom--mouse-container div {
+          font-size: 12px;
+        }
+      }
+      `}</style>
+      </section>
+      
       {/* About Section */}
       <section data-id="2" style={styles.aboutSection} id="aboutSection">
         {/* Animated Starfield Background */}
@@ -1658,230 +1899,936 @@ function App() {
         </div>
       </section>
       {/* Projects Section */}
-      <section
-        data-id="4"
-        id="projects"
-        className="section-padding bg-black text-white py-5"
-      >
-        <div className="container">
-          {/* Popup Title */}
-          {showPopup && (
+      <section id="projects-section" className="projects-section">
+        {/* Animated Background */}
+        <div className="stars-bg" data-aos="fade-in" data-aos-duration="2000">
+          {stars.map((star) => (
             <div
-              className="popup-container position-fixed top-50 start-50 translate-middle text-center rounded shadow-lg p-4"
-              style={{ zIndex: 1055 }}
-            >
-              <h2 className="fw-bold text-white mb-3">✨ My Projects ✨</h2>
-              <p className="text-light mb-0">
-                Explore some of my latest work. Click on a project image to view
-                it in detail.
-              </p>
-            </div>
-          )}
+              key={star.id}
+              className="star"
+              style={{
+                left: `${star.x}%`,
+                top: `${star.y}%`,
+                width: `${star.size}px`,
+                height: `${star.size}px`,
+                animationDuration: `${star.animationDuration}s`,
+                animationDelay: `${star.animationDelay}s`,
+              }}
+            />
+          ))}
+        </div>
 
-          {/* Projects Alternating Layout */}
-          {filteredProjects.map((project, index) => (
+        {/* Gradient Orbs */}
+        <div
+          className="orb orb-left"
+          data-aos="fade-right"
+          data-aos-duration="1500"
+        />
+        <div
+          className="orb orb-right"
+          data-aos="fade-left"
+          data-aos-duration="1500"
+        />
+
+        <div className="container">
+          {/* Section Header */}
+          <div
+            className="section-header"
+            data-aos="fade-down"
+            data-aos-delay="200"
+          >
             <div
-              className="row align-items-center mb-5 project-card"
-              key={index}
-              data-aos={index % 2 === 0 ? "fade-right" : "fade-left"}
+              className="badge-wrapper"
+              data-aos="zoom-in"
+              data-aos-delay="300"
             >
-              {/* Image */}
-              <div
-                className={`col-lg-6 ${index % 2 === 0 ? "" : "order-lg-2"}`}
+              <span className="section-badge">Project</span>
+            </div>
+            <h2
+              className="section-title"
+              data-aos="fade-up"
+              data-aos-delay="400"
+            >
+              Featured Projects
+            </h2>
+            <p
+              className="section-subtitle"
+              data-aos="fade-up"
+              data-aos-delay="500"
+            >
+              Crafting digital experiences that blend creativity with
+              functionality
+            </p>
+
+            {/* Filter Buttons */}
+            <div
+              className="filter-container"
+              data-aos="zoom-in-up"
+              data-aos-delay="600"
+            >
+              {["All", "Web App", "Mobile"].map((filter, i) => (
+                <button
+                  key={filter}
+                  onClick={() => setActiveFilter(filter)}
+                  className={`filter-btn ${
+                    activeFilter === filter ? "active" : ""
+                  }`}
+                  data-aos="zoom-in"
+                  data-aos-delay={700 + i * 100}
+                >
+                  {filter}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Projects Grid */}
+          <div className="projects-grid">
+            {filteredProjects.map((project, index) => (
+              <article
+                key={index}
+                className={`project-card ${index % 2 ? "reverse" : ""}`}
+                data-aos={index % 2 ? "fade-left" : "fade-right"}
+                data-aos-delay={200}
+                data-aos-duration="1000"
               >
-                <div className="project-img-wrapper position-relative">
-                  <img
-                    src={project.image}
-                    alt={project.title}
-                    className="img-fluid rounded shadow-sm project-img"
+                {/* Image Section */}
+                <div
+                  className="project-image-container"
+                  data-aos="zoom-in"
+                  data-aos-delay={300}
+                >
+                  <div
+                    className="project-image-wrapper"
                     onClick={() => openProject(project, 0)}
-                  />
-                  <div className="img-overlay d-flex justify-content-center align-items-center">
-                    <span className="text-warning fw-bold">
-                      Click to Enlarge
-                    </span>
+                  >
+                    <img
+                      src={project.image}
+                      alt={project.title}
+                      className="project-image"
+                    />
+                    <div className="image-overlay">
+                      <div className="overlay-content">
+                        <svg
+                          className="icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <circle cx="11" cy="11" r="8"></circle>
+                          <path d="m21 21-4.35-4.35"></path>
+                        </svg>
+                        <span>View Gallery</span>
+                      </div>
+                    </div>
+                    <div className="image-glow"></div>
                   </div>
                 </div>
-              </div>
 
-              {/* Details */}
-              <div
-                className={`col-lg-6 mt-4 mt-lg-0 ${
-                  index % 2 === 0 ? "" : "order-lg-1"
-                }`}
-              >
-                <span className="badge bg-warning text-dark mb-2">
-                  {project.category}
-                </span>
-                <h3 className="fw-bold">{project.title}</h3>
-                <p className="text-light">{project.description}</p>
+                {/* Content Section */}
+                <div
+                  className="project-content"
+                  data-aos="fade-up"
+                  data-aos-delay={400}
+                >
+                  <span
+                    className="category-badge"
+                    data-aos="fade-right"
+                    data-aos-delay={450}
+                  >
+                    {project.category}
+                  </span>
+                  <h3
+                    className="project-title"
+                    data-aos="fade-up"
+                    data-aos-delay={500}
+                  >
+                    {project.title}
+                  </h3>
+                  <p
+                    className="project-description"
+                    data-aos="fade-up"
+                    data-aos-delay={550}
+                  >
+                    {project.description}
+                  </p>
 
-                {/* Tech Stack */}
-                <div className="mb-3">
-                  {project.technologies.map((tech, idx) => (
-                    <span key={idx} className="badge bg-secondary me-2 mb-2">
-                      {tech}
-                    </span>
-                  ))}
+                  {/* Tech Stack */}
+                  <div
+                    className="tech-stack"
+                    data-aos="fade-up"
+                    data-aos-delay={600}
+                  >
+                    {project.technologies.map((tech, idx) => (
+                      <span
+                        key={idx}
+                        className="tech-tag"
+                        data-aos="zoom-in"
+                        data-aos-delay={650 + idx * 50}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div
+                    className="action-buttons"
+                    data-aos="fade-up"
+                    data-aos-delay={700}
+                  >
+                    {project.link && project.link !== "#" && (
+                      <a
+                        href={project.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-primary"
+                        data-aos="zoom-in"
+                        data-aos-delay={750}
+                      >
+                        <svg
+                          className="btn-icon"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        Live Demo
+                      </a>
+                    )}
+                    {project.github && project.github !== "#" && (
+                      <a
+                        href={project.github}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="btn-secondary"
+                        data-aos="zoom-in"
+                        data-aos-delay={800}
+                      >
+                        <svg
+                          className="btn-icon"
+                          viewBox="0 0 24 24"
+                          fill="currentColor"
+                        >
+                          <path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.17 6.839 9.49.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.463-1.11-1.463-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.087 2.91.831.092-.646.35-1.086.636-1.336-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.203 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.167 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+                        </svg>
+                        Source Code
+                      </a>
+                    )}
+                  </div>
                 </div>
-
-                {/* Buttons */}
-                <div className="d-flex gap-2">
-                  {project.link && project.link !== "#" && (
-                    <a
-                      href={project.link}
-                      className="btn btn-warning"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <i className="bi bi-eye"></i> Live Demo
-                    </a>
-                  )}
-                  {project.github && project.github !== "#" && (
-                    <a
-                      href={project.github}
-                      className="btn btn-outline-light"
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      <i className="bi bi-github"></i> Code
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+              </article>
+            ))}
+          </div>
 
           {/* Modal */}
           {selectedProject && (
-            <div
-              className="modal show d-block"
-              tabIndex="-1"
-              style={{ backgroundColor: "rgba(0,0,0,0.85)" }}
-            >
-              <div className="modal-dialog modal-xl modal-dialog-centered">
-                <div className="modal-content bg-dark text-white">
-                  <div className="modal-header border-0">
-                    <h5 className="modal-title">{selectedProject.title}</h5>
-                    <button
-                      type="button"
-                      className="btn-close btn-close-white"
-                      onClick={closeProject}
-                    ></button>
-                  </div>
+            <div className="modal-overlay" onClick={closeProject}>
+              <div
+                className="modal-container"
+                onClick={(e) => e.stopPropagation()}
+                data-aos="zoom-in"
+                data-aos-duration="500"
+              >
+                <div
+                  className="modal-header"
+                  data-aos="fade-down"
+                  data-aos-delay="100"
+                >
+                  <h3 className="modal-title">{selectedProject.title}</h3>
+                  <button className="modal-close" onClick={closeProject}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                      <line x1="18" y1="6" x2="6" y2="18"></line>
+                      <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                  </button>
+                </div>
 
-                  <div className="modal-body text-center">
-                    {selectedProject?.gallery?.length > 0 && (
-                      <img
-                        src={
-                          selectedProject.gallery[currentIndex] ||
-                          selectedProject.image
-                        }
-                        alt="project"
-                        className="img-fluid rounded"
-                        style={{ maxHeight: "70vh", objectFit: "contain" }}
-                      />
-                    )}
+                <div
+                  className="modal-body"
+                  data-aos="fade-up"
+                  data-aos-delay="200"
+                >
+                  <img
+                    src={
+                      selectedProject.gallery?.[currentIndex] ||
+                      selectedProject.image
+                    }
+                    alt="project"
+                    className="modal-image"
+                  />
 
-                    {/* Thumbnails */}
-                    <div className="d-flex justify-content-center mt-3 flex-wrap">
-                      {selectedProject?.gallery?.map((img, index) => (
+                  {/* Thumbnails */}
+                  {selectedProject.gallery?.length > 1 && (
+                    <div
+                      className="thumbnails"
+                      data-aos="fade-up"
+                      data-aos-delay="300"
+                    >
+                      {selectedProject.gallery.map((img, idx) => (
                         <img
-                          key={index}
+                          key={idx}
                           src={img}
-                          alt={`thumb-${index}`}
-                          className={`m-1 rounded shadow-sm ${
-                            index === currentIndex
-                              ? "border border-warning"
-                              : ""
+                          alt={`thumb-${idx}`}
+                          className={`thumbnail ${
+                            idx === currentIndex ? "active" : ""
                           }`}
-                          style={{
-                            width: "80px",
-                            height: "60px",
-                            objectFit: "cover",
-                            cursor: "pointer",
-                          }}
-                          onClick={() => setCurrentIndex(index)}
+                          onClick={() => setCurrentIndex(idx)}
+                          data-aos="flip-left"
+                          data-aos-delay={350 + idx * 50}
                         />
                       ))}
                     </div>
-                  </div>
-
-                  <div className="modal-footer justify-content-between border-0">
-                    <button
-                      className="btn btn-outline-light"
-                      onClick={prevImage}
-                    >
-                      ‹ Prev
-                    </button>
-                    <button
-                      className="btn btn-outline-light"
-                      onClick={nextImage}
-                    >
-                      Next ›
-                    </button>
-                  </div>
+                  )}
                 </div>
+
+                {/* Modal Footer */}
+                {selectedProject.gallery?.length > 1 && (
+                  <div
+                    className="modal-footer"
+                    data-aos="fade-up"
+                    data-aos-delay="400"
+                  >
+                    <button onClick={prevImage} className="nav-btn">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                      </svg>
+                      Previous
+                    </button>
+                    <span className="modal-counter">
+                      {currentIndex + 1} / {selectedProject.gallery.length}
+                    </span>
+                    <button onClick={nextImage} className="nav-btn">
+                      Next
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                      >
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                      </svg>
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}
         </div>
 
-        {/* Inline Styles */}
         <style>{`
-        .section-padding {
-          padding: 80px 0;
-        }
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+          }
 
-        .popup-container {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-          color: white;
-          animation: popInBounce 0.7s ease forwards;
-        }
+          .projects-section {
+            position: relative;
+            min-height: 100vh;
+            padding: 100px 0;
+            background: linear-gradient(180deg, #000000 0%, #0a0a0a 100%);
+            overflow: hidden;
+          }
 
-        @keyframes popInBounce {
-          0% { transform: translate(-50%, -50%) scale(0.3) rotate(-10deg); opacity: 0; }
-          50% { transform: translate(-50%, -50%) scale(1.05) rotate(2deg); opacity: 0.9; }
-          100% { transform: translate(-50%, -50%) scale(1) rotate(0deg); opacity: 1; }
-        }
+          /* Background Elements */
+          .stars-bg {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.4;
+          }
 
-        .project-card:hover {
-          transform: translateY(-6px);
-          transition: transform 0.3s ease;
-        }
+          .star {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            animation: twinkle infinite ease-in-out;
+          }
 
-        .project-img-wrapper {
-          position: relative;
-          overflow: hidden;
-          border-radius: 12px;
-        }
+          @keyframes twinkle {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+          }
 
-        .project-img {
-          height: 350px;
-          width: 100%;
-          object-fit: cover;
-          cursor: pointer;
-          transition: transform 0.4s ease;
-        }
+          .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            animation: float 10s ease-in-out infinite;
+            pointer-events: none;
+          }
 
-        .project-img-wrapper:hover .project-img {
-          transform: scale(1.05);
-        }
+          .orb-left {
+            top: 10%;
+            left: 0;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(245,158,11,0.2) 0%, transparent 70%);
+          }
 
-        .img-overlay {
-          position: absolute;
-          top: 0; left: 0;
-          width: 100%; height: 100%;
-          background: rgba(0,0,0,0.5);
-          opacity: 0;
-          transition: opacity 0.3s ease;
-          border-radius: 12px;
-        }
+          .orb-right {
+            bottom: 10%;
+            right: 0;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(139,92,246,0.2) 0%, transparent 70%);
+            animation-delay: 3s;
+          }
 
-        .project-img-wrapper:hover .img-overlay {
-          opacity: 1;
-        }
-      `}</style>
+          @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50% { transform: translate(30px, -30px) scale(1.1); opacity: 0.8; }
+          }
+
+          .container {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+          }
+
+          /* Section Header */
+          .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+          }
+
+          .badge-wrapper {
+            margin-bottom: 20px;
+          }
+
+          .section-badge {
+            display: inline-block;
+            padding: 8px 24px;
+            background: rgba(245,158,11,0.1);
+            border: 1px solid rgba(245,158,11,0.3);
+            border-radius: 50px;
+            color: #f59e0b;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+          }
+
+          .section-title {
+            font-size: 56px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 50%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            line-height: 1.2;
+          }
+
+          .section-subtitle {
+            font-size: 20px;
+            color: #9ca3af;
+            max-width: 600px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
+          }
+
+          /* Filter Buttons */
+          .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+          }
+
+          .filter-btn {
+            padding: 12px 32px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 50px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(10px);
+          }
+
+          .filter-btn:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(245,158,11,0.3);
+            transform: translateY(-2px);
+          }
+
+          .filter-btn.active {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            border-color: transparent;
+            color: #000;
+            box-shadow: 0 8px 32px rgba(245,158,11,0.4);
+          }
+
+          /* Projects Grid */
+          .projects-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+          }
+
+          .project-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            background: linear-gradient(135deg, rgba(17,24,39,0.5), rgba(31,41,55,0.3));
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 32px;
+            padding: 40px;
+            backdrop-filter: blur(20px);
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+          }
+
+          .project-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 32px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(245,158,11,0.1), transparent);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+          }
+
+          .project-card:hover {
+            transform: translateY(-12px);
+            box-shadow: 0 32px 64px rgba(0,0,0,0.6);
+            border-color: rgba(245,158,11,0.2);
+          }
+
+          .project-card:hover::before {
+            opacity: 1;
+          }
+
+          .project-card.reverse {
+            grid-template-columns: 1fr 1fr;
+          }
+
+          .project-card.reverse .project-image-container {
+            order: 2;
+          }
+
+          .project-card.reverse .project-content {
+            order: 1;
+          }
+
+          /* Image Section */
+          .project-image-container {
+            position: relative;
+          }
+
+          .project-image-wrapper {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 16/10;
+          }
+
+          .project-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          .project-image-wrapper:hover .project-image {
+            transform: scale(1.08);
+          }
+
+          .image-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.95), transparent 60%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            padding: 32px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+          }
+
+          .project-image-wrapper:hover .image-overlay {
+            opacity: 1;
+          }
+
+          .overlay-content {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #f59e0b;
+            font-weight: 700;
+            font-size: 18px;
+          }
+
+          .icon {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2.5px;
+          }
+
+          .image-glow {
+            position: absolute;
+            inset: -50%;
+            background: radial-gradient(circle, rgba(245,158,11,0.3), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            pointer-events: none;
+          }
+
+          .project-image-wrapper:hover .image-glow {
+            opacity: 1;
+          }
+
+          /* Content Section */
+          .project-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+          }
+
+          .category-badge {
+            display: inline-block;
+            width: fit-content;
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            border-radius: 50px;
+            color: #000;
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+          }
+
+          .project-title {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fff;
+            line-height: 1.2;
+            transition: color 0.3s ease;
+          }
+
+          .project-card:hover .project-title {
+            color: #f59e0b;
+          }
+
+          .project-description {
+            font-size: 17px;
+            color: #d1d5db;
+            line-height: 1.7;
+          }
+
+          /* Tech Stack */
+          .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+          }
+
+          .tech-tag {
+            padding: 8px 18px;
+            background: rgba(139,92,246,0.1);
+            border: 1px solid rgba(139,92,246,0.3);
+            border-radius: 10px;
+            color: #c4b5fd;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+          }
+
+          .tech-tag:hover {
+            background: rgba(139,92,246,0.2);
+            border-color: rgba(139,92,246,0.5);
+            transform: translateY(-2px);
+          }
+
+          /* Action Buttons */
+          .action-buttons {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+          }
+
+          .btn-primary,
+          .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 28px;
+            border-radius: 14px;
+            font-size: 15px;
+            font-weight: 700;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          .btn-primary {
+            background: linear-gradient(135deg, #f59e0b, #f97316);
+            color: #000;
+            box-shadow: 0 4px 20px rgba(245,158,11,0.3);
+          }
+
+          .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(245,158,11,0.5);
+          }
+
+          .btn-secondary {
+            background: transparent;
+            border: 2px solid rgba(255,255,255,0.2);
+            color: #fff;
+          }
+
+          .btn-secondary:hover {
+            border-color: #f59e0b;
+            background: rgba(245,158,11,0.1);
+            transform: translateY(-3px);
+          }
+
+          .btn-icon {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.5px;
+          }
+
+          /* Modal */
+          .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(20px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 9999;
+            animation: fadeIn 0.3s ease-out;
+          }
+
+          @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+          }
+
+          .modal-container {
+            background: linear-gradient(135deg, #1f2937, #111827);
+            border-radius: 28px;
+            border: 1px solid rgba(245,158,11,0.2);
+            max-width: 1200px;
+            width: 100%;
+            overflow: hidden;
+            box-shadow: 0 32px 64px rgba(0,0,0,0.8);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+          }
+
+          @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+          }
+
+          .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+          }
+
+          .modal-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+          }
+
+          .modal-close {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+          }
+
+          .modal-close svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2.5px;
+          }
+
+          .modal-close:hover {
+            background: #ef4444;
+            transform: rotate(90deg);
+          }
+
+          .modal-body {
+            padding: 32px;
+          }
+
+          .modal-image {
+            width: 100%;
+            max-height: 70vh;
+            object-fit: contain;
+            border-radius: 16px;
+          }
+
+          .thumbnails {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 24px;
+            flex-wrap: wrap;
+          }
+
+          .thumbnail {
+            width: 120px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 12px;
+            cursor: pointer;
+            opacity: 0.5;
+            border: 3px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+          }
+
+          .thumbnail.active {
+            border-color: #f59e0b;
+            opacity: 1;
+            transform: scale(1.08);
+          }
+
+          .thumbnail:hover {
+            opacity: 1;
+            transform: scale(1.05);
+          }
+
+          .modal-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 32px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+          }
+
+          .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+          }
+
+          .nav-btn svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2.5px;
+          }
+
+          .nav-btn:hover {
+            background: rgba(245,158,11,0.2);
+            transform: translateY(-2px);
+          }
+
+          .modal-counter {
+            color: #9ca3af;
+            font-size: 15px;
+            font-weight: 600;
+          }
+
+          /* Responsive */
+          @media (max-width: 968px) {
+            .section-title {
+              font-size: 42px;
+            }
+
+            .project-card {
+              grid-template-columns: 1fr;
+              gap: 32px;
+              padding: 32px;
+            }
+
+            .project-card.reverse .project-image-container {
+              order: 1;
+            }
+
+            .project-card.reverse .project-content {
+              order: 2;
+            }
+
+            .project-title {
+              font-size: 28px;
+            }
+          }
+
+          @media (max-width: 640px) {
+            .projects-section {
+              padding: 60px 0;
+            }
+
+            .section-title {
+              font-size: 32px;
+            }
+
+            .section-subtitle {
+              font-size: 16px;
+            }
+
+            .project-card {
+              padding: 24px;
+            }
+
+            .project-title {
+              font-size: 24px;
+            }
+
+            .action-buttons {
+              flex-direction: column;
+            }
+
+            .btn-primary,
+            .btn-secondary {
+              width: 100%;
+              justify-content: center;
+            }
+
+            .modal-footer {
+              flex-direction: column;
+              gap: 16px;
+            }
+
+            .nav-btn {
+              width: 100%;
+              justify-content: center;
+            }
+          }
+        `}</style>
       </section>
 
       <section style={{ position: "relative" }}>
@@ -2164,7 +3111,7 @@ function App() {
 
           {/* Social Links */}
           <div
-            className="text-center mt-5 pt-4 border-top border-secondary"
+            className="text-center mt-5 pt-4 border-top "
             data-aos="zoom-in"
             data-aos-delay="400"
           >
@@ -2193,14 +3140,13 @@ function App() {
         </div>
       </section>
       {/* Floating Resume Button */}
-        <a
-      href="/resume.pdf"
-      download="Henry_Buena_Resume.pdf"
-      className={`resume-btn pos-${section}`}
-    >
-      📄 Download Resume
-    </a>
-
+      <a
+        href="/resume.pdf"
+        download="Henry_Buena_Resume.pdf"
+        className={`resume-btn pos-${section}`}
+      >
+        📄 Download Resume
+      </a>
       {/* Footer */}
       <footer className="bg-dark text-white pt-5 pb-3">
         <div className="container">
@@ -2251,7 +3197,7 @@ function App() {
                 </li>
                 <li>
                   <a
-                    href="#projects"
+                    href="#projects-section"
                     className="text-white text-decoration-none"
                   >
                     Projects
@@ -2327,11 +3273,10 @@ function App() {
         </div>
       </footer>
       {/* Bootstrap Icons CDN */}
-
       {/* Bootstrap JS */}
       {/* AOS JS */}
     </>
   );
-  }
+}
 
 export default App;
