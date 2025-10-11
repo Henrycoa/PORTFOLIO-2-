@@ -958,7 +958,7 @@ function App() {
 
      try {
        const response = await axios.post(
-         "http://www.henry.gt.tc/backend/send_email.php",
+         "https://henry.infinityfreeapp.com/backend/send_email.php",
          formData,
          {
            headers: { "Content-Type": "application/json" },
