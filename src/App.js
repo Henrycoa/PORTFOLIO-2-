@@ -958,7 +958,7 @@ function App() {
 
      try {
        const response = await axios.post(
-         "http://localhost/PORTFOLIO/Backend/send_email.php",
+         "http://www.henry.gt.tc/backend/send_email.php",
          formData,
          {
            headers: { "Content-Type": "application/json" },
