@@ -12,6 +12,8 @@ import college from "./assets/college.png";
 // import freelance from "./assets/freelance.png"; // Add this line
 import AOS from "aos";
 import "aos/dist/aos.css";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function App() {
   const [typedText, setTypedText] = useState("");
@@ -897,6 +899,7 @@ function App() {
 
     return () => window.removeEventListener("scroll", handleScroll);
   }, [showPopup]);
+
   useEffect(() => {
     const generateStars = () => {
       const starArray = [];
@@ -931,6 +934,72 @@ function App() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, [lastScrollY]);
+
+    const [formData, setFormData] = useState({
+      name: "",
+      email: "",
+      subject: "",
+      message: "",
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [status, setStatus] = useState("");
+
+    // Handle input changes
+    const handleChange = (e) => {
+      setFormData({ ...formData, [e.target.name]: e.target.value });
+    };
+
+    // Handle submit
+   const handleSubmit = async (e) => {
+     e.preventDefault();
+     setLoading(true);
+     setStatus("");
+
+     try {
+       const response = await axios.post(
+         "http://localhost/PORTFOLIO/Backend/send_email.php",
+         formData,
+         {
+           headers: { "Content-Type": "application/json" },
+         }
+       );
+
+       if (response.data.success) {
+         // ✅ SUCCESS ALERT
+         Swal.fire({
+           icon: "success",
+           title: "Message Sent!",
+           text: "Your message has been sent successfully 🚀",
+           confirmButtonColor: "#4b6cb7",
+         });
+
+         setFormData({ name: "", email: "", subject: "", message: "" });
+       } else {
+         // ⚠️ ERROR ALERT
+         Swal.fire({
+           icon: "error",
+           title: "Failed to Send",
+           text:
+             response.data.message || "Something went wrong. Please try again.",
+           confirmButtonColor: "#d33",
+         });
+       }
+     } catch (error) {
+       console.error(error);
+       // ⚠️ NETWORK ERROR ALERT
+       Swal.fire({
+         icon: "error",
+         title: "Network Error",
+         text: "Please check your internet connection or server.",
+         confirmButtonColor: "#d33",
+       });
+     }
+
+     setLoading(false);
+   };
+
+
   return (
     <>
       <Navbar />
@@ -1045,7 +1114,6 @@ function App() {
             data-aos="zoom-in-down"
             data-aos-duration="1100"
             data-aos-delay="500"
-
             style={{
               top: "15%",
               right: "25%",
@@ -1055,7 +1123,6 @@ function App() {
                 "linear-gradient(to bottom, rgba(0, 123, 255, 0.3), transparent)",
               transform: "rotate(30deg)",
               zIndex: 1,
-
             }}
           ></div>
 
@@ -1487,7 +1554,7 @@ function App() {
       }
       `}</style>
       </section>
-      
+
       {/* About Section */}
       <section data-id="2" style={styles.aboutSection} id="aboutSection">
         {/* Animated Starfield Background */}
@@ -1635,7 +1702,7 @@ function App() {
         }
         `}</style>
         <div style={{ height: "100vh" }}></div>
-        <div
+        {/* <div
           className="elementor-element elementor-element-21baa8c elementor-widget elementor-widget-image elementor-motion-effects-parent animated"
           data-id="21baa8c"
           data-element_type="widget"
@@ -1667,7 +1734,7 @@ function App() {
               sizes="(max-width: 300px) 100vw, 300px"
             />
           </div>
-        </div>
+            </div> */}
       </section>
 
       <section
@@ -1714,7 +1781,7 @@ function App() {
             <h2
               className="mt-4"
               style={{
-                color: "#EBD3F8",
+                color: "#f97316",
                 fontWeight: "bold",
                 fontSize: "32px",
                 textShadow: "0 0 12px rgba(255, 215, 0, 0.8)",
@@ -1837,12 +1904,13 @@ function App() {
         }
 
         .highlight-scroll {
-          color: #EBD3F8;
+          color: #f97316;
           font-weight: 600;
           text-shadow: 0 0 8px rgba(255, 215, 0, 0.6);
         }
       `}</style>
       </section>
+
       {/* <section className="wave-divider">
         <div
           className="elementor-shape elementor-shape-top"
@@ -1898,8 +1966,10 @@ function App() {
           </svg>
         </div>
       </section>
+
       {/* Projects Section */}
       <section id="projects-section" className="projects-section">
+        <div style={{ height: "5vh" }}></div>
         {/* Animated Background */}
         <div className="stars-bg" data-aos="fade-in" data-aos-duration="2000">
           {stars.map((star) => (
@@ -2121,6 +2191,7 @@ function App() {
                 </div>
               </article>
             ))}
+            <div style={{ height: "5vh" }}></div>
           </div>
 
           {/* Modal */}
@@ -2985,6 +3056,7 @@ function App() {
         </div>
       </section>
       {/* Testimonials Section */}
+
       {/* Contact Section */}
       <section id="contact" className="section-padding bg-black text-white">
         <div className="container">
@@ -3006,53 +3078,75 @@ function App() {
                 data-aos="fade-right"
                 data-aos-delay="200"
               >
-                <form>
+                <form onSubmit={handleSubmit}>
                   <div className="row">
                     <div className="col-md-6 mb-3">
                       <input
                         type="text"
+                        name="name"
                         className="form-control form-control-lg bg-secondary text-white border-0"
                         placeholder="Your Name"
+                        value={formData.name}
+                        onChange={handleChange}
                         required
                       />
                     </div>
                     <div className="col-md-6 mb-3">
                       <input
                         type="email"
+                        name="email"
                         className="form-control form-control-lg bg-secondary text-white border-0"
                         placeholder="Your Email"
+                        value={formData.email}
+                        onChange={handleChange}
                         required
                       />
                     </div>
                   </div>
+
                   <div className="mb-3">
                     <input
                       type="text"
+                      name="subject"
                       className="form-control form-control-lg bg-secondary text-white border-0"
                       placeholder="Subject"
+                      value={formData.subject}
+                      onChange={handleChange}
                       required
                     />
                   </div>
+
                   <div className="mb-3">
                     <textarea
+                      name="message"
                       className="form-control form-control-lg bg-secondary text-white border-0"
                       rows="6"
                       placeholder="Your Message"
+                      value={formData.message}
+                      onChange={handleChange}
                       required
                     ></textarea>
                   </div>
+
                   <div className="text-center">
                     <button
                       type="submit"
                       className="btn btn-warning btn-lg px-5 py-3 rounded-pill shadow"
+                      disabled={loading}
                     >
-                      Send Message
+                      {loading ? "Sending..." : "Send Message"}
                     </button>
                   </div>
+
+                  {status && (
+                    <p className="text-center mt-3 fw-bold text-light">
+                      {status}
+                    </p>
+                  )}
                 </form>
               </div>
             </div>
-
+            
             {/* Map */}
             <div className="col-lg-6">
               <div
